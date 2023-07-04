@@ -1,0 +1,69 @@
+jenkins server (ec2):
+-----------------
+1.jenkins install
+2.git install 
+3.jenkins start
+4.inbound rules 8080 add
+5.keygenerate (jenkins)
+ id_rsa, id_rsa.pub
+
+18.switch the jenkin user to check the connectivity between jenkins server and webserver:
+
+19.ssh webserver's username@hostip 
+ 
+
+webserver server ((ec2)):
+--------------------------
+10.git installation
+11./etc/ssh/sshd_config -- > need to enable the PubkeyAuthentication yes , PasswordAuthentication yes --> restart the sshd service
+12.user creation, password set
+13.login as user
+14.keygenerate (username)
+ id_rsa, id_rsa.pub
+
+15../home/username/.ssh/ --> create the authorized keys files --> add the jenkins user's public key and save it.
+
+22.clone the repo.
+
+
+
+
+github:
+-------
+20.settings : SSH keys and gpg keys --> new ssh key --> save jenkins and webserver user public key
+21.create the repo and add the any file inside the repo 
+
+
+
+jenkins UI:
+----------
+
+6.ipaddress:8080
+7.password enter
+8.configuration (username and password plugins install)
+
+9.dashboard--> manage jenkins -- > manage plugins -->  publish over ssh , git and github
+                           16. --> configure the systemm --> publish over ssh --> jenkins(private key), ssh ( username, hostname, userpassword)
+                            17.--> manage credentails --> system --> globel cred --> add cred --> click ssh username with private key --> scope (globel(jenkins node)--> click ok to save
+
+
+23.creating the jenkins freestyle project --> dashboard --> click new item --> type any name and click freestyle project and click ok.
+
+24.once freestyle project created need to configure the 
+soure code management : click --> git add the repo url
+                        credentails--> choose the saved cred
+  		        branch --> need to choose main
+
+click --> GitHub hook trigger for GITScm polling
+
+click build option and click execute shell option -->  add the below script 
+ssh -tt qtreedevops@3.135.17.88 << EOF
+cd /home/qtreedevops/qtreeweekend
+git pull origin main
+ll -ls
+exit
+EOF
+
+25.once completed save and click build now option.
+
+
